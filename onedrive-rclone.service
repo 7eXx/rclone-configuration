@@ -21,7 +21,8 @@ ExecStart=/usr/bin/rclone mount Onedrive: /media/Onedrive/ \
         --stats=0 \
         --checkers=8 \
         --dir-cache-time=60m \
-        --cache-info-age=60m       
+        --cache-info-age=60m \
+        --allow-other
 
 ExecStop=/bin/fusermount -u /media/Onedrive
 ExecStopPost=/usr/bin/rmdir -p /media/Onedrive
