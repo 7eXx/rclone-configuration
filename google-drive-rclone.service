@@ -1,0 +1,34 @@
+# /etc/systemd/system/rclone.service
+[Unit]
+Description=Rclone (rclone)
+Requires=systemd-networkd.service
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/usr/bin/mkdir -p /home/texx/GoogleDrive-Frigoveneta/
+ExecStart=/usr/bin/rclone mount GoogleDrive-Frigoveneta: /home/texx/GoogleDrive-Frigoveneta/  \
+       	--config=/home/texx/.config/rclone/rclone.conf \
+       	--vfs-cache-mode writes \
+       	--cache-tmp-upload-path=/tmp/rclone/upload \
+        --cache-chunk-path=/tmp/rclone/chunks \
+        --cache-workers=4 \
+        --cache-dir=/tmp/rclone/vfs \
+        --cache-writes \
+        --cache-db-path=/tmp/rclone/db \
+        --no-modtime \
+        --drive-use-trash \
+        --stats=0 \
+        --checkers=8 \
+        --dir-cache-time=60m \
+        --cache-info-age=60m \
+        --allow-other
+        
+ExecStop=/bin/fusermount -u /home/texx/GoogleDrive-Frigoveneta/ 
+ExecStopPost=/usr/bin/rmdir -p /home/texx/GoogleDrive-Frigoveneta/ 
+Restart=always
+RestartSec=10
+TimeoutSec=45
+
+[Install]
+WantedBy=multi-user.target
